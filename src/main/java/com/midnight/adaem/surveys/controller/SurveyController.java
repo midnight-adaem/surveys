@@ -7,10 +7,14 @@ import com.midnight.adaem.surveys.repository.ParticipationRepository;
 import com.midnight.adaem.surveys.repository.StatusesRepository;
 import com.midnight.adaem.surveys.repository.SurveysRespository;
 import lombok.NonNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/surveys")
@@ -40,6 +44,16 @@ public class SurveyController {
         return members;
     }
 
+    @GetMapping("/members/{memberId}")
+    public Members getReviewerByDisplayName(@PathVariable Long memberId) {
+        Optional<Members> membersOptional = this.memberRepository.findById(memberId);
+        if (membersOptional.isEmpty()) {
+            // throw exception
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No member found for ID  " + memberId);
+        }
+
+        return membersOptional.get();
+    }
 
     //a. Fetch all respondents who completed the questionnaire for a given survey ID.
     @GetMapping("/members/surveys/{surveyId}")
