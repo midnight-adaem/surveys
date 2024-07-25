@@ -2,6 +2,10 @@ package com.midnight.adaem.surveys.controller;
 
 
 import com.midnight.adaem.surveys.com.midnight.adaem.surveys.model.Members;
+import com.midnight.adaem.surveys.com.midnight.adaem.surveys.model.Statuses;
+import com.midnight.adaem.surveys.com.midnight.adaem.surveys.model.custom.PointsDTO;
+import com.midnight.adaem.surveys.com.midnight.adaem.surveys.model.Surveys;
+import com.midnight.adaem.surveys.com.midnight.adaem.surveys.model.custom.SurveyStatsDTO;
 import com.midnight.adaem.surveys.repository.MemberRepository;
 import com.midnight.adaem.surveys.repository.ParticipationRepository;
 import com.midnight.adaem.surveys.repository.StatusesRepository;
@@ -40,8 +44,7 @@ public class SurveyController {
 
     @GetMapping("/members")
     public Iterable<Members> getAllMembers() {
-        Iterable<Members> members = memberRepository.findAll();
-        return members;
+        return memberRepository.findAll();
     }
 
     @GetMapping("/members/{memberId}")
@@ -62,18 +65,64 @@ public class SurveyController {
     }
 
 
-        //b. Fetch all surveys that were completed by a given member ID.
-        //c. Fetch the list of points (with the related survey ID) that a member has collected so far (input is the member ID).
-        //d. Fetch the list of members who can be invited to a given survey (not participated in that survey yet and are active).
-        /*
-        e. Fetch the list of surveys with statistics, including:
-        - Survey ID
-        - Survey name
-        - Number of completed questionnaires
-        - Number of filtered participants
-        - Number of rejected participants
-        - Average length of time spent on the survey (Participation.length)
-        */
+    //b. Fetch all surveys that were completed by a given member ID.
+    @GetMapping("/members/{memberId}/compSurveys")
+    public Iterable<Surveys> getComplSurveysForMember(@PathVariable @NonNull Long memberId) {
+        return surveysRespository.findAllCompletedSurveysByMemberId(memberId);
+    }
+
+
+    //c. Fetch the list of points (with the related survey ID) that a member has collected so far (input is the member ID).
+    @GetMapping("/members/{memberId}/points")
+    public Iterable<PointsDTO> getPointsForMember(@PathVariable @NonNull Long memberId) {
+        return surveysRespository.findAllPointsByMember(memberId);
+    }
+
+
+    //d. Fetch the list of members who can be invited to a given survey (not participated in that survey yet and are active).
+    @GetMapping("/surveys/{surveyId}/invitableMembers")
+    public Iterable<Members> getInvitableMembersBySurvey(@PathVariable @NonNull Long surveyId) {
+        return memberRepository.findAllInvitableForSurvey(surveyId);
+    }
+
+    @GetMapping("/surveys/{surveyId}")
+    public Surveys getSurveyById(@PathVariable @NonNull Long surveyId) {
+
+        Optional<Surveys> surveysOptional = this.surveysRespository.findById(surveyId);
+        if (surveysOptional.isEmpty()) {
+            // throw exception
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No survey found for ID  " + surveyId);
+        }
+
+        return surveysOptional.get();
+
+    }
+
+    @GetMapping("/surveys")
+    public Iterable<Surveys> getAllSurveys() {
+        return surveysRespository.findAll();
+    }
+
+
+    /*
+    e. Fetch the list of surveys with statistics, including:
+    - Survey ID
+    - Survey name
+    - Number of completed questionnaires
+    - Number of filtered participants
+    - Number of rejected participants
+    - Average length of time spent on the survey (Participation.length)
+*/
+    @GetMapping("/surveys/stats")
+    public Iterable<SurveyStatsDTO> getAllSurveysWithStats() {
+        return surveysRespository.findAllSurveysWithStats();
+    }
+
+
+    @GetMapping("/statuses")
+    public Iterable<Statuses> getAllStatuses() {
+        return statusesRepository.findAll();
+    }
 
 
 }
