@@ -2,6 +2,7 @@ package com.midnight.adaem.surveys.controller;
 
 
 import com.midnight.adaem.surveys.com.midnight.adaem.surveys.model.Members;
+import com.midnight.adaem.surveys.com.midnight.adaem.surveys.model.Participation;
 import com.midnight.adaem.surveys.com.midnight.adaem.surveys.model.Statuses;
 import com.midnight.adaem.surveys.com.midnight.adaem.surveys.model.custom.PointsDTO;
 import com.midnight.adaem.surveys.com.midnight.adaem.surveys.model.Surveys;
@@ -165,6 +166,12 @@ public class SurveyController {
     @GetMapping("/statuses")
     public Iterable<Statuses> getAllStatuses() {
         return statusesRepository.findAll();
+    }
+
+
+    @GetMapping("/participation")
+    public Iterable<Participation> getAllParticipation() {
+        return this.participationRepository.findAll();
     }
 
 
