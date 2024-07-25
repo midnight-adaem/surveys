@@ -1,1 +1,1 @@
-# Surveys RESTful applcation for job application test
+# Surveys RESTful service for job application test
