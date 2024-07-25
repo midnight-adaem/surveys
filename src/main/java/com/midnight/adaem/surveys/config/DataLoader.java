@@ -10,7 +10,7 @@ import com.midnight.adaem.surveys.com.midnight.adaem.surveys.model.Surveys;
 import com.midnight.adaem.surveys.repository.MemberRepository;
 import com.midnight.adaem.surveys.repository.ParticipationRepository;
 import com.midnight.adaem.surveys.repository.StatusesRepository;
-import com.midnight.adaem.surveys.repository.SurveysRespository;
+import com.midnight.adaem.surveys.repository.SurveysRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -39,13 +39,13 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private final MemberRepository memberRepository;
     private final ParticipationRepository participationRepository;
     private final StatusesRepository statusesRepository;
-    private final SurveysRespository surveysRespository;
+    private final SurveysRepository surveysRepository;
 
-    public DataLoader(MemberRepository memberRepository, ParticipationRepository participationRepository, StatusesRepository statusesRepository, SurveysRespository surveysRespository) {
+    public DataLoader(MemberRepository memberRepository, ParticipationRepository participationRepository, StatusesRepository statusesRepository, SurveysRepository surveysRepository) {
         this.memberRepository = memberRepository;
         this.participationRepository = participationRepository;
         this.statusesRepository = statusesRepository;
-        this.surveysRespository = surveysRespository;
+        this.surveysRepository = surveysRepository;
     }
 
     @Override
@@ -153,7 +153,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         List<Surveys> surveys = getSurveyDataFromCSV();
 
         for (Surveys survey : surveys) {
-            surveysRespository.save(survey);
+            surveysRepository.save(survey);
         }
     }
 }

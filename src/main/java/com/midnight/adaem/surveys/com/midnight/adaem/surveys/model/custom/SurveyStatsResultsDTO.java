@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SurveyStatsDTO {
+public class SurveyStatsResultsDTO {
     private Long surveyId;
     private String surveyName;
-    private Long statusId;
-    private Long count;
+    private Long numCompleted;
+    private Long numFiltered;
+    private Long numRejected;
     private Double avgLength;
-
 }
